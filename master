@@ -1,0 +1,82 @@
+#/bin/bash
+doc()
+{
+cat <<-EOF
+# ---------------------------------------------------------------
+# Author : Naresh Naruka
+# Creation date : 15/07/2017
+# ---------------------------------------------------------------
+# Usage ./master
+# Generate the output on screen, it builds load balancer and 
+# two web server
+#----------------------------------------------------------------
+# Procedure :
+#  Should be executed manually
+# ---------------------------------------------------------------
+# Dependencies :
+# 1. Vagrant and Oracle Virtualbox should be installed
+# ---------------------------------------------------------------
+# Improvements :
+# - tell me about them
+#
+# ---------------------------------------------------------------
+# Change history :
+# date          Version    Modified    Description
+# 15/07/2017    1.0        NSN         First Release
+# 
+# ---------------------------------------------------------------
+#
+EOF
+}
+while getopts h OPT
+do
+        case $OPT in
+        h)      doc
+                exit 0;;
+        esac
+done;
+echo "################################"
+echo "Start Building Machines"
+echo "################################"
+vagrant up
+if [ $? -ne 0 ]
+	then
+		echo "Vagrant failed, exiting"
+		vagrant destroy
+		exit 0
+fi;
+
+sleep 5
+
+echo "Vagrant up completed"
+echo ;
+echo "################################"
+
+echo;
+echo "################################"
+echo "Running Ansible code now "
+echo "################################"
+./ansible.sh
+if [ $? -ne 0 ]
+	then
+		echo "Ansible failed, exiting"
+		vagrant destroy
+		exit 0
+fi;
+
+echo "Ansible execution finished"
+echo "################################"
+echo ;
+echo "################################"
+echo "Testing starts"
+echo "################################"
+./loadbalance.sh
+if [ $? -ne 0 ]
+	then
+		echo "Testing failed, exiting"
+		vagrant destroy
+		exit 0
+fi;
+
+echo "Testing finished"
+echo "################################"
