@@ -32,8 +32,8 @@ SSHEOF
 chown -R vagrant:vagrant /home/vagrant/.ssh/
 EOF
 
-    h.vm.provision "shell",inline: "cp -pr /vagrant/ansible /home/vagrant", run: 'always'
-    h.vm.provision "shell",inline: "/bin/sh /vagrant/provision_control.sh", run: 'always'
+    h.vm.provision "shell",inline: "cp -pr /vagrant/ansible /home/vagrant"
+    h.vm.provision "shell",inline: "/bin/sh /vagrant/provision_control.sh"
   end
 
   config.vm.define "lb01" do |h|
